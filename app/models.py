@@ -1,6 +1,13 @@
-from flask_login import  UserMixin, current_user, login_user, logout_user
+from flask_login import UserMixin, LoginManager
+
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
+from flask_sqlalchemy import SQLAlchemy
+# from flask_login import LoginManager
+# from flask_migrate import Migrate
+
+db = SQLAlchemy()
+from app import LoginManager
+
 
 
 
@@ -20,6 +27,11 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+@login.user_loader
+def load_user(id):
+    return User.querry.get(int(id))
+
 
 class Good(db.Model):
     id = db.Column(db.Integer, primary_key = True)
