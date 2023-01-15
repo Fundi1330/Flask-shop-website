@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Basic Title</title>
+    {% endif %}
+</head>
+<body>
+    <div>
+        <a href="/">Home</a>
+        {% if current_user.is_anonymous %}
+        <a href="/login">Login</a>
+        {% else %}
+        <a href="/register">Register</a>
+        {% endif %}
+        <p>New User? <a href="{{ url_for('register') }}">Click to Register</a></p>
+    </div>
+    <hr>
+    {% block content %} {% endblock %}
+
+</body>
+</html>
