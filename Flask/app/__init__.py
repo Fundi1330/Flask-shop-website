@@ -1,11 +1,10 @@
 from flask import Flask, render_template, flash, redirect, url_for
-from app import forms
 from app.models import db
 from flask_migrate import Migrate
 
-from datetime import datetime
+# from datetime import datetime
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
-from app.forms import RegestrationForm
+from app.forms import RegestrationForm, LoginForm
 from app.models import User
 
 app = Flask(__name__)
@@ -41,7 +40,7 @@ def create_tables():
     db.create_all()
 @login.user_loader
 def load_user(id):
-    return User.querry.get(int(id))
+    return User.query.get(int(id))
 
 
 @app.route('/')
@@ -60,7 +59,7 @@ def logout():
 def login():
     if current_user.is_authenticated:
        return redirect(url_for("index"))
-    form = forms.LoginForm()
+    form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
@@ -77,8 +76,15 @@ def register():
     form = RegestrationForm()
     if form.validate_on_submit():
         flash("Congrats!")
+        user = User(username=form.username.data, email=form.email.data, password_hash=form.password.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
         return redirect(url_for('login'))
-    user = User(username=form.username.data, email=form.email.data, password_hash=form.password.data)
-    db.session.add(user)
-    db.session.commit()
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('user.html', user=user)
