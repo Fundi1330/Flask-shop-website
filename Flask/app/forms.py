@@ -30,3 +30,8 @@ class RegestrationForm(FlaskForm):
         if email is not None:
             flash('Use a different email')
 
+
+class AddGoodForm(FlaskForm):
+    name = StringField('Good name', validators=[DataRequired()])
+    descreption = StringField('Good descreption', validators=[DataRequired()])
+    price = StringField('Good price', validators=[DataRequired()])

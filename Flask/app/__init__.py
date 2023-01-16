@@ -4,8 +4,8 @@ from flask_migrate import Migrate
 
 # from datetime import datetime
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
-from app.forms import RegestrationForm, LoginForm
-from app.models import User
+from app.forms import RegestrationForm, LoginForm, AddGoodForm
+from app.models import User, Food_good
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '1234'
@@ -88,3 +88,22 @@ def register():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('user.html', user=user)
+
+@app.route('/good/<goodname>')
+@login_required
+def good(goodname):
+    food = Food_good.query.filter_by(name=goodname).first()
+    return render_template('good.html', good=food)
+
+@app.route('/food')
+@login_required
+def food():
+    food_list = Food_good.query.all()
+    return render_template('food.html', food_list=food_list)
+
+@app.route('/add_good')
+def add_good():
+    form = AddGoodForm()
+    if form.validate_on_submit():
+        flash('Good succefully added to DataBase')
+    return render_template('add_good.html')

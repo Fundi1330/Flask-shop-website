@@ -15,7 +15,11 @@
         <a href="/login">Login</a>
         {% else %}
         <a href="{{ url_for('user', username=current_user.username) }}">Cart</a>
+        <a href="/food">Food</a>
         <a href="{{ url_for('logout') }}">Logout</a>
+        {% endif %}
+        {% if current_user.admin %}
+        <a href="/add_good">add good</a>
         {% endif %}
     </div>
     <hr>
