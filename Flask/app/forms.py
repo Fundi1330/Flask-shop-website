@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired, Email, EqualTo
+from app.models import User
+from flask import flash
 
 
 """Форми на сайті"""
@@ -11,11 +13,20 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
-class RegistrationForm(FlaskForm):
+class RegestrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    remember_me = BooleanField('Remember me')
     submit = SubmitField('Sign In')
+    
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            flash('Use a different username')
+
+    def validate_username(self, email):
+        email = User.query.filter_by(email=email.data).first()
+        if email is not None:
+            flash('Use a different email')
 

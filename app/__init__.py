@@ -11,7 +11,7 @@ app.config['SECRET_KEY'] = '1234'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_NOTIFICATION'] = False
 
-from models import db
+from app.models import db
 db.init_app(app) #Add this line Before migrate line
 login = LoginManager(app)
 migrate = Migrate(app, db)

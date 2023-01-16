@@ -1,11 +1,12 @@
 from flask import Flask, render_template, flash, redirect, url_for
 from app import forms
-from flask_sqlalchemy import SQLAlchemy
+from app.models import db
 from flask_migrate import Migrate
-from werkzeug.security import generate_password_hash, check_password_hash
+
 from datetime import datetime
-from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user, login_required
-from app.forms import RegistrationForm
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+from app.forms import RegestrationForm
+from app.models import User
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '1234'
@@ -14,27 +15,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.app_context().push()
 
-db = SQLAlchemy(app)
+db.init_app(app)
 migrate = Migrate(app, db)
 
 login = LoginManager(app)
 
 
 """Таблиці для БД"""
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(60), index=True, unique=True)
-    email = db.Column(db.String, index=True, unique=True)
-    password_hash = db.Column(db.String)
 
-    def __repr__(self):
-        return '<User {}'.format(self.username)
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
 
 
 # class Post(db.Model):
@@ -80,13 +68,17 @@ def login():
             return redirect(url_for("login"))
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for("index"))
+    
     return render_template("login.html", title="Sign in", form=form)
 
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
-    form = RegistrationForm()
+    form = RegestrationForm()
     if form.validate_on_submit():
         flash("Congrats!")
         return redirect(url_for('login'))
+    user = User(username=form.username.data, email=form.email.data, password_hash=form.password.data)
+    db.session.add(user)
+    db.session.commit()
     return render_template('register.html', title='Register', form=form)
