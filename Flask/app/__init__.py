@@ -1,11 +1,11 @@
-from flask import Flask, render_template, flash, redirect, url_for
+from flask import Flask, render_template, flash, redirect, request, url_for
 from app.models import db
 from flask_migrate import Migrate
 
 # from datetime import datetime
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from app.forms import RegestrationForm, LoginForm, AddGoodForm
-from app.models import User, Food_good
+from app.models import User, Food_good, Clothes_good
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '1234'
@@ -95,19 +95,39 @@ def user(username):
 @app.route('/good/<goodname>')
 @login_required
 def good(goodname):
-    food = Food_good.query.filter_by(name=goodname).first()
-    return render_template('good.html', good=food)
+    good = Food_good.query.filter_by(name=goodname).first()
+    if good:
+        pass
+    else:
+        good = Clothes_good.query.filter_by(name=goodname).first()
+    return render_template('good.html', good=good)
 
 @app.route('/food')
 @login_required
 def food():
     food_list = Food_good.query.all()
-    return render_template('food.html', food_list=food_list)
+    return render_template('food.html', title='Food', food_list=food_list)
 
-@app.route('/add_good')
+@app.route('/clothes')
+@login_required
+def clothes():
+    clothes_list = Clothes_good.query.all()
+    return render_template('clothes.html', title='Clothes', clothes_list=clothes_list)
+
+@app.route('/add_good', methods=["GET", "POST"])
 def add_good():
     form = AddGoodForm()
     if form.validate_on_submit():
         flash('Good succefully added to DataBase')
-        good = Food_good(name=form.name.data, description=form.descreption.data, )
-    return render_template('add_good.html')
+        good = None
+        radio = request.form['options']
+        if radio == 'food':
+            good = Food_good(name=form.name.data, descreption=form.descreption.data,
+            price=form.price.data)
+        else:
+            good = Clothes_good(name=form.name.data, descreption=form.descreption.data,
+            price=form.price.data, size=form.size.data, matherial=form.matherial.data)
+
+        db.session.add(good)
+        db.session.commit()
+    return render_template('add_good.html', title='Add good', form=form)

@@ -22,10 +22,11 @@ class User(UserMixin, db.Model):
 class Clothes_good(UserMixin, db.Model):
     __tablename__ = 'Clothes_Goods'
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(45), index = True, unique = True)
-    description = db.Column(db.String(120), index = True, unique = True)
+    name = db.Column(db.String(45), index = True)
+    descreption = db.Column(db.String(120), index = True)
+    price = db.Column(db.Float, index=True)
     size = db.Column(db.String(10), index = True)
-    material = db.Column(db.String(75), index = True)
+    matherial = db.Column(db.String(75), index = True)
     
     def __repr__(self) -> str:
         return '<User {}'.format(self.username)
@@ -33,8 +34,8 @@ class Clothes_good(UserMixin, db.Model):
 class Food_good(UserMixin, db.Model):
     __tablename__ = 'Food_Goods'
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(40), index = True, unique = True)
-    description = db.Column(db.String(80), index = True, unique = True)
+    name = db.Column(db.String(40), index = True)
+    descreption = db.Column(db.String(80), index = True)
     price = db.Column(db.Float, index=True)
     
     def __repr__(self) -> str:

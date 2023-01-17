@@ -35,4 +35,6 @@ class AddGoodForm(FlaskForm):
     name = StringField('Good name', validators=[DataRequired()])
     descreption = StringField('Good descreption', validators=[DataRequired()])
     price = StringField('Good price', validators=[DataRequired()])
+    size = StringField('Size')
+    matherial = StringField('Matherial')
     submit = SubmitField('Add good')
