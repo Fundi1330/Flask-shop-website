@@ -11,7 +11,7 @@
 <body>
     <div>
         <a href="/">Home</a>
-        {% if current_user.is_anonymos %}
+        {% if authenticated %}
         <a href="/login">Login</a>
         {% else %}
         <a href="{{ url_for('user', username=current_user.username) }}">Cart</a>

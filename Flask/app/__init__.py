@@ -46,7 +46,10 @@ def load_user(id):
 @app.route('/')
 @app.route('/index/')
 def index():
-    return render_template('index.html', title='Home')
+    authenticated = True
+    if current_user.is_authenticated:
+        authenticated = False
+    return render_template('index.html', title='Home', authenticated=authenticated)
 
 
 @app.route('/logout')
@@ -106,4 +109,5 @@ def add_good():
     form = AddGoodForm()
     if form.validate_on_submit():
         flash('Good succefully added to DataBase')
+        good = Food_good(name=form.name.data, description=form.descreption.data, )
     return render_template('add_good.html')
