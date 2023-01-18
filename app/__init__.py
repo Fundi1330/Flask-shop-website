@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 # from datetime import datetime
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from app.forms import RegestrationForm, LoginForm, AddGoodForm
-from app.models import User, Food_good, Clothes_good, CartItem
+from app.models import User, Food_good, Clothes_good
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '1234'
