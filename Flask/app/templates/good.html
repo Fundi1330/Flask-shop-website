@@ -4,5 +4,11 @@
     <p>Name: {{ good.name }}</p>
     <p>Price: {{ good.price }}</p>
     <p>Description: {{ good.descreption}} </p>
-    
+    {% if clothes %}
+    <p>Size: {{ good.size }}</p>
+    <p>Matherial: {{ good.matherial }}</p>
+    {% endif %}
+    <form action="" method="post">
+        <input type="submit" value="add" name="add">Add to cart
+    </form>
 {% endblock %}

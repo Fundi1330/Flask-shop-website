@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 # from datetime import datetime
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from app.forms import RegestrationForm, LoginForm, AddGoodForm
-from app.models import User, Food_good, Clothes_good
+from app.models import User, Food_good, Clothes_good, CartItem
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '1234'
@@ -96,11 +96,14 @@ def user(username):
 @login_required
 def good(goodname):
     good = Food_good.query.filter_by(name=goodname).first()
+    clothes = False
     if good:
         pass
     else:
         good = Clothes_good.query.filter_by(name=goodname).first()
-    return render_template('good.html', good=good)
+        clothes = True
+    
+    return render_template('good.html', good=good, clothes=clothes)
 
 @app.route('/food')
 @login_required
@@ -127,6 +130,7 @@ def add_good():
         else:
             good = Clothes_good(name=form.name.data, descreption=form.descreption.data,
             price=form.price.data, size=form.size.data, matherial=form.matherial.data)
+            
 
         db.session.add(good)
         db.session.commit()
