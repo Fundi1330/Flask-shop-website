@@ -1,6 +1,13 @@
-{% extends base.html %}
+{% extends 'base.html' %}
 
 {% block content %}
-    <h1>Hello, {{ user.username }}</h1>
-    <p>it's your cart</p>
-{% ebdblock %}
+<tabel>
+   <tr valign="top">
+      <td></td>
+     <td>
+         <h1>User: {{user.username}} </h1>
+         <p>This is your cart</p>
+         <p>there are your goods:</p>
+   </tr>
+</tabel>
+{% endblock %}

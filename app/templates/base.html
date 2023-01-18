@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        {% if title %}
-        <title>{{title}} - Microblog</title>
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Basic Title</title>
+    {% endif %}
+</head>
+<body>
+    <div>
+        <a href="/">Home</a>
+        {% if authenticated %}
+        <a href="/login">Login</a>
         {% else %}
-        <title>Welcome to Microblog</title>
+        <a href="{{ url_for('user', username=current_user.username) }}">Cart</a>
+        <a href="/food">Food</a>
+        <a href="/clothes">Clothes</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
         {% endif %}
-    </head>
-    <body>
-        <div>
-            <a href="/">Home</a>
-            {% if current_user.is_anonymos %}
-            <a href="/login">Login</a>
-            {% else %}
-            <!-- <a href="/goods">Goods</a> -->
-            <a href="{{ url_for('user', username=current_user.username) }}">Cart</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% endif %}
-        </div>
-        <hr>
-        {% block content %} {% endblock %}
-    </body>
+        {% if current_user.admin %}
+        <a href="/add_good">add good</a>
+        {% endif %}
+    </div>
+    <hr>
+    {% block content %} {% endblock %}
+
+</body>
 </html>
