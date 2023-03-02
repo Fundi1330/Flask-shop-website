@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Add good</h2>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=48)}}
+            {% for error in form.name.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.descreption.label }}<br>
+            {{ form.descreption(size=48)}}
+            {% for error in form.descreption.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.price.label }}<br>
+            {{ form.price(size=48)}}
+            {% for error in form.price.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>For clothes good</p>
+        <p>
+            {{ form.size.label }}<br>
+            {{ form.size(size=48)}}
+            {% for error in form.size.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.matherial.label }}<br>
+            {{ form.matherial(size=48)}}
+            {% for error in form.matherial.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <input type="radio" name="options" id="food" value="food"> Food <br>
+        <input type="radio" name="options" id="clothes" value="clothes"> Clothes
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
