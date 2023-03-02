@@ -2,15 +2,21 @@ from flask import Flask, render_template, flash, redirect, request, url_for
 from app.models import db
 from flask_migrate import Migrate
 
-# from datetime import datetime
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from app.forms import RegestrationForm, LoginForm, AddGoodForm
 from app.models import User, Food_good, Clothes_good
 
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.fileadmin import FileAdmin
+
+import os.path as op
+
 app = Flask(__name__)
-app.config["SECRET_KEY"] = '1234'
+app.config['SECRET_KEY'] = '1234'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+path = op.join(op.dirname(__file__), 'static')
 
 app.app_context().push()
 
@@ -19,22 +25,8 @@ migrate = Migrate(app, db)
 
 login = LoginManager(app)
 
+admin = Admin(app, "FlaskApp", url='/admin')
 
-"""Таблиці для БД"""
-
-
-
-# class Post(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     body = db.Column(db.String(140))
-#     time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-#     def __repr__(self):
-#         return '<Post {}'.format(self.body)
-
-
-"""Декоратори для відображення сторінок та їх вмісту"""
 @app.before_first_request
 def create_tables():
     db.create_all()
@@ -135,3 +127,7 @@ def add_good():
         db.session.add(good)
         db.session.commit()
     return render_template('add_good.html', title='Add good', form=form)
+
+
+admin.add_view(FileAdmin(path, '/static/', name='Files'))
+admin.add_view(ModelView(User, db.session))
